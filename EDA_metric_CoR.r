@@ -17,9 +17,12 @@ for(i in 1:length(Cities)){
   Fhat <- ecdf(Cities[[i]]$`Cost of return`)
   Cities[[i]]$city <- names(Cities)[i]
   Cities[[i]]$p_CoR <- Fhat(Cities[[i]]$`Cost of return`)
+  Fhat2 <- ecdf(Cities[[i]]$`Inverse SP`)
+  Cities[[i]]$p_ISP <- Fhat2(Cities[[i]]$`Inverse SP`)
 }
 
-commonColumns <- Reduce(intersect, lapply(Cities, names))
+commonColumns <- Reduce(intersect,
+                        lapply(Cities, names))
 forPlotting <- do.call(rbind, lapply(Cities, function(city){
   city[, commonColumns]
 })
@@ -57,16 +60,57 @@ CreateAllFacet <- function(df, col){
 ddf <- CreateAllFacet(forPlotting, "city")
 
 
-CoR.plot <- ggplot(data = ddf,
+CoRC.plot <- ggplot(data = ddf,
        aes(x = Groups,
            y = `Cost of return`,
            colour = Groups,
            fill = Groups)) +
-  geom_boxplot(alpha = 0.5) +
+  geom_violin(alpha = 0.5) +
   scale_x_discrete("") +
+  scale_y_continuous("CoRC") + 
   facet_wrap(facet~., scales = "free_y") + 
   theme_bw(base_size = 16) +
   theme(legend.position = "none")
+
+CoRC.plot
+
+ggsave(CoRC.plot,
+       file = "CoRC_cities.pdf",
+       scale = 1,
+       width = 297,
+       height = 210,
+       units = "mm",
+       dpi = 300)
+
+CoRC_prob.plot <- ggplot(data = ddf,
+       aes(x = Groups,
+           y = p_CoR,
+           colour = Groups,
+           fill = Groups)) +
+  geom_violin(alpha = 0.5) +
+  scale_x_discrete("") +
+  scale_y_continuous("Probability-transformed CoRC") +
+  facet_wrap(facet~.) + 
+  theme_bw(base_size = 16) +
+  theme(legend.position = "none")
+
+CoRC_prob.plot
+
+### CoR (not CoRC) stuff
+
+CoR.plot <- ggplot(data = ddf,
+                    aes(x = Groups,
+                        y = `Inverse SP`/1E3 ,
+                        colour = Groups,
+                        fill = Groups)) +
+  geom_violin(alpha = 0.5) +
+  scale_x_discrete("") +
+  scale_y_log10("CoR") + 
+  facet_wrap(facet~., scales = "free_y") + 
+  theme_bw(base_size = 16) +
+  theme(legend.position = "none")
+
+CoR.plot
 
 ggsave(CoR.plot,
        file = "CoR_cities.pdf",
@@ -77,15 +121,18 @@ ggsave(CoR.plot,
        dpi = 300)
 
 CoR_prob.plot <- ggplot(data = ddf,
-       aes(x = Groups,
-           y = p_CoR,
-           colour = Groups,
-           fill = Groups)) +
-  geom_boxplot(alpha = 0.5) +
+                         aes(x = Groups,
+                             y = p_ISP,
+                             colour = Groups,
+                             fill = Groups)) +
+  geom_violin(alpha = 0.5) +
   scale_x_discrete("") +
+  scale_y_continuous("Probability-transformed CoR") +
   facet_wrap(facet~.) + 
   theme_bw(base_size = 16) +
   theme(legend.position = "none")
+
+CoR_prob.plot
 
 ggsave(CoR_prob.plot,
        file = "CoR_probabilities_cities.pdf",
