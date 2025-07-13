@@ -75,7 +75,7 @@ CoRC.plot <- ggplot(data = ddf,
 CoRC.plot
 
 ggsave(CoRC.plot,
-       file = "CoRC_cities.pdf",
+       file = "Results/CoRC_cities.pdf",
        scale = 1,
        width = 297,
        height = 210,
@@ -113,7 +113,7 @@ CoR.plot <- ggplot(data = ddf,
 CoR.plot
 
 ggsave(CoR.plot,
-       file = "CoR_cities.pdf",
+       file = "Results/CoR_cities.pdf",
        scale = 1,
        width = 297,
        height = 210,
@@ -135,7 +135,7 @@ CoR_prob.plot <- ggplot(data = ddf,
 CoR_prob.plot
 
 ggsave(CoR_prob.plot,
-       file = "CoR_probabilities_cities.pdf",
+       file = "Results/CoR_probabilities_cities.pdf",
        scale = 1,
        width = 297,
        height = 210,
