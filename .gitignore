@@ -1,2 +1,3 @@
 # gitignore file for CoR project
 /cache/
+*venv
